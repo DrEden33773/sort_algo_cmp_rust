@@ -7,7 +7,7 @@ mod selection_sort;
 mod shell_sort;
 
 use bubble_sort::bubble_sort;
-use heap_sort::heap_sort;
+// use heap_sort::heap_sort;
 use insertion_sort::insertion_sort;
 use merge_sort::merge_sort;
 use quick_sort::quick_sort;

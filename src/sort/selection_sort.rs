@@ -1,7 +1,7 @@
 /// selection_sort  
 
 pub fn selection_sort<T: PartialOrd>(vec: &mut Vec<T>) {
-    if vec.is_empty() {
+    if vec.len() <= 1 {
         return;
     }
     for begin in 0..vec.len() {

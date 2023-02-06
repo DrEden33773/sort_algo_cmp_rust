@@ -46,7 +46,7 @@ where
 }
 
 pub fn merge_sort<T: PartialOrd + Copy>(vec: &mut Vec<T>) {
-    if vec.is_empty() {
+    if vec.len() <= 1 {
         return;
     }
     ms_helper(vec, 0, vec.len());

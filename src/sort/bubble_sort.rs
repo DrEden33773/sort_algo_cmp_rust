@@ -1,7 +1,7 @@
 /// bubble_sort
 
 pub fn bubble_sort<T: PartialOrd>(vec: &mut Vec<T>) {
-    if vec.is_empty() {
+    if vec.len() <= 1 {
         return;
     }
     for upper_bond in 0..vec.len() {

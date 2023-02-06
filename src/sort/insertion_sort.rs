@@ -1,7 +1,7 @@
 /// insertion_sort
 
 pub fn insertion_sort<T: PartialOrd>(vec: &mut Vec<T>) {
-    if vec.is_empty() {
+    if vec.len() <= 1 {
         return;
     }
     for from in 1..vec.len() {

@@ -32,7 +32,7 @@ where
 {
     let front = begin;
     let back = end - 1;
-    let mut pivot = (front + back) / 2;
+    let mut pivot = begin;
     vec.swap(pivot, back);
     let mut eof_less = front; // [begin, eof_less) contain 0 element at first
     let mut eof_greater = front; // [eof_less, eof_great) contain 0 element at first
@@ -62,7 +62,7 @@ where
 }
 
 pub fn quick_sort<T: PartialOrd + Copy>(vec: &mut Vec<T>) {
-    if vec.is_empty() {
+    if vec.len() <= 1 {
         return;
     }
     qs_helper(vec, 0, vec.len());

@@ -24,7 +24,7 @@ where
 }
 
 pub fn shell_sort<T: PartialOrd>(vec: &mut Vec<T>) {
-    if vec.is_empty() {
+    if vec.len() <= 1 {
         return;
     }
     insertion_sort_with_interval(vec, 7);
