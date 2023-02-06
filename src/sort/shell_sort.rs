@@ -1,4 +1,3 @@
-/// shell_sort
 use crate::sort::insertion_sort;
 
 fn insertion_sort_with_interval<T>(vec: &mut Vec<T>, interval: usize)
@@ -23,6 +22,7 @@ where
     }
 }
 
+/// shell_sort
 pub fn shell_sort<T: PartialOrd>(vec: &mut Vec<T>) {
     if vec.len() <= 1 {
         return;

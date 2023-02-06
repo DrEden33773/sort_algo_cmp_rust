@@ -1,5 +1,3 @@
-/// heap_sort
-
 fn make_heap<T: PartialOrd>(vec: &mut Vec<T>, root: usize, end: usize) {
     let mut dad = root;
     let mut son = 2 * dad + 1;
@@ -19,6 +17,7 @@ fn make_heap<T: PartialOrd>(vec: &mut Vec<T>, root: usize, end: usize) {
     }
 }
 
+/// heap_sort
 pub fn heap_sort<T: PartialOrd>(vec: &mut Vec<T>) {
     if vec.len() <= 1 {
         return;

@@ -1,9 +1,3 @@
-/// radix_sort
-///
-/// Generic radix_sort is hard to implement.
-///
-/// Now, `radix_sort` could only receive `Vec<u32>` as the only input.
-
 const RADIX: usize = 10;
 
 static mut BUCKETS: Vec<Vec<usize>> = Vec::new();
@@ -71,6 +65,11 @@ fn clean_buckets() {
     }
 }
 
+/// radix_sort
+///
+/// Generic radix_sort is hard to implement.
+///
+/// Now, `radix_sort` could only receive `Vec<u32>` as the only input.
 pub fn radix_sort(vec: &mut Vec<usize>) {
     init_buckets();
     let max_len = get_max_len(vec);

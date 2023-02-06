@@ -1,5 +1,3 @@
-/// merge_sort
-
 fn merge<T>(vec: &mut Vec<T>, begin: usize, end: usize)
 where
     T: PartialOrd + Copy,
@@ -45,6 +43,7 @@ where
     }
 }
 
+/// merge_sort
 pub fn merge_sort<T: PartialOrd + Copy>(vec: &mut Vec<T>) {
     if vec.len() <= 1 {
         return;

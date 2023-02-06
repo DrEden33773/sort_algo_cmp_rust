@@ -1,5 +1,3 @@
-/// quick_sort
-
 #[allow(dead_code)]
 fn main_stream_partition<T>(vec: &mut Vec<T>, begin: usize, end: usize) -> usize
 where
@@ -61,6 +59,7 @@ where
     }
 }
 
+/// quick_sort
 pub fn quick_sort<T: PartialOrd + Copy>(vec: &mut Vec<T>) {
     if vec.len() <= 1 {
         return;
