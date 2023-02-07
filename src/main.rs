@@ -1,7 +1,7 @@
 mod sort;
 
 #[allow(dead_code)]
-fn dbg() {
+fn debug() {
     use rand::Rng;
     let simple: Vec<usize> = (0..15)
         .map(|_| rand::thread_rng().gen_range(0..100))
@@ -22,8 +22,7 @@ fn benchmark(times: usize) {
     }
 }
 
-#[allow(unused_variables)]
 fn main() {
-    // dbg();
+    // debug();
     benchmark(10);
 }

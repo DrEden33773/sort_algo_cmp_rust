@@ -16,10 +16,19 @@ use radix_sort::radix_sort;
 use selection_sort::selection_sort;
 use shell_sort::shell_sort;
 
+use std::process::exit;
 use std::thread;
 use std::time;
 
-#[allow(dead_code)]
+fn assert_ascending_ordered<T: PartialOrd>(to_check: &[T], sort_name: &str) {
+    for (left, right) in to_check.windows(2).map(|s| (&s[0], &s[1])) {
+        if left > right {
+            println!("{} is failed!", sort_name);
+            exit(-1);
+        }
+    }
+}
+
 pub fn debug_all_sorts(vec: &Vec<usize>) {
     println!();
     let sort_func_table: Vec<(&str, fn(&mut [usize]))> = vec![
@@ -45,26 +54,13 @@ pub fn debug_all_sorts(vec: &Vec<usize>) {
         let end_time = time::Instant::now();
         // get duration
         let duration = end_time - start_time;
+        // check
+        assert_ascending_ordered(&to_sort, sort_name);
         // println
         println!("{} => {}ms.\n", sort_name, duration.as_millis());
-        // check
-        match if_ascending_ordered(&to_sort) {
-            true => (),
-            false => panic!("Error => {} is failed.", sort_name),
-        }
     }
 }
 
-fn if_ascending_ordered<T: PartialOrd>(to_check: &[T]) -> bool {
-    for i in 0..to_check.len() - 1 {
-        if to_check[i] > to_check[i + 1] {
-            return false;
-        }
-    }
-    true
-}
-
-#[allow(dead_code)]
 pub fn benchmark_all_sorts(vec: &Vec<usize>) {
     // start with newline
     println!();
@@ -91,11 +87,8 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
             sort_func(&mut to_sort);
             let end_time = time::Instant::now();
             let duration = end_time - start_time;
+            assert_ascending_ordered(&to_sort, sort_name);
             println!("{} => {}ms.", sort_name, duration.as_millis());
-            match if_ascending_ordered(&to_sort) {
-                true => (),
-                false => panic!("Error => {} is failed.", sort_name),
-            }
         });
         // push handle
         handles.push(handle);
