@@ -30,8 +30,7 @@ where
 {
     let front = 0;
     let back = slice.len() - 1;
-    let mid = (front + back) / 2;
-    let mut pivot = back;
+    let mut pivot = front;
     slice.swap(pivot, back);
     let mut eof_less = front; // [begin, eof_less) contain 0 element at first
     let mut eof_greater = front; // [eof_less, eof_great) contain 0 element at first

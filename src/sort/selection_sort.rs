@@ -1,15 +1,15 @@
 /// selection_sort  
-pub fn selection_sort<T: PartialOrd>(vec: &mut [T]) {
-    if vec.len() <= 1 {
+pub fn selection_sort<T: PartialOrd>(slice: &mut [T]) {
+    if slice.len() <= 1 {
         return;
     }
-    for begin in 0..vec.len() {
+    for begin in 0..slice.len() {
         let mut min_index = begin;
-        for cmp in begin + 1..vec.len() {
-            if vec[min_index] > vec[cmp] {
+        for cmp in begin + 1..slice.len() {
+            if slice[min_index] > slice[cmp] {
                 min_index = cmp;
             }
         }
-        vec.swap(begin, min_index);
+        slice.swap(begin, min_index);
     }
 }

@@ -1,4 +1,7 @@
 fn make_heap<T: PartialOrd>(slice: &mut [T]) {
+    if slice.len() <= 1 {
+        return;
+    }
     let root = 0;
     let end = slice.len() - 1;
     let mut dad = root;
@@ -24,20 +27,14 @@ pub fn heap_sort<T: PartialOrd>(slice: &mut [T]) {
     if slice.len() <= 1 {
         return;
     }
-    let end = slice.len();
-    let len = end;
     // find the last node with two leaves
-    let mut root = len / 2 - 1;
+    let last_root = slice.len() / 2 - 1;
     // basic heap
-    loop {
+    for root in (0..=last_root).rev() {
         make_heap(&mut slice[root..]);
-        if root == 0 {
-            break;
-        }
-        root -= 1;
     }
     // adjust
-    for end in (1..=len).rev() {
+    for end in (1..=slice.len()).rev() {
         let back = end - 1;
         slice.swap(0, back);
         make_heap(&mut slice[..back]);

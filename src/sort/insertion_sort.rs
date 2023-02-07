@@ -1,12 +1,12 @@
 /// insertion_sort
-pub fn insertion_sort<T: PartialOrd>(vec: &mut [T]) {
-    if vec.len() <= 1 {
+pub fn insertion_sort<T: PartialOrd>(slice: &mut [T]) {
+    if slice.len() <= 1 {
         return;
     }
-    for from in 1..vec.len() {
+    for from in 1..slice.len() {
         for cmp in (1..=from).rev() {
-            if vec[cmp - 1] > vec[cmp] {
-                vec.swap(cmp - 1, cmp);
+            if slice[cmp - 1] > slice[cmp] {
+                slice.swap(cmp - 1, cmp);
             }
         }
     }
