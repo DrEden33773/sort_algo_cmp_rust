@@ -16,9 +16,11 @@ use radix_sort::radix_sort;
 use selection_sort::selection_sort;
 use shell_sort::shell_sort;
 
+use std::thread;
+use std::time;
+
 #[allow(dead_code)]
 pub fn debug_all_sorts(vec: &Vec<usize>) {
-    use std::time;
     println!();
     let sort_func_table: Vec<(&str, fn(&mut [usize]))> = vec![
         ("quick_sort", quick_sort),
@@ -50,8 +52,9 @@ pub fn debug_all_sorts(vec: &Vec<usize>) {
 
 #[allow(dead_code)]
 pub fn benchmark_all_sorts(vec: &Vec<usize>) {
-    use std::time;
+    // start with newline
     println!();
+    // all sort algorithms
     let sort_func_table: Vec<(&str, fn(&mut [usize]))> = vec![
         ("quick_sort", quick_sort),
         ("heap_sort", heap_sort),
@@ -62,18 +65,27 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
         ("insertion_sort", insertion_sort),
         ("bubble_sort", bubble_sort),
     ];
-    let pool = rayon::ThreadPoolBuilder::new()
-        .num_threads(8)
-        .build()
-        .unwrap();
+    // benchmark all sort algorithms in multiple threads
+    let mut handles = Vec::with_capacity(sort_func_table.len());
     for (sort_name, sort_func) in sort_func_table {
-        pool.install(|| {
-            let to_sort = vec.clone();
+        // get clone
+        let to_sort = vec.clone();
+        // exec sort
+        let handle = thread::spawn(move || {
+            let mut to_sort = to_sort;
             let start_time = time::Instant::now();
-            sort_func(&mut to_sort.clone());
+            sort_func(&mut to_sort);
             let end_time = time::Instant::now();
             let duration = end_time - start_time;
-            println!("{} => {}ms.\n", sort_name, duration.as_millis());
+            println!("{} => {}ms.", sort_name, duration.as_millis());
         });
+        // push handle
+        handles.push(handle);
     }
+    // wait all threads
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    // end with newline
+    println!();
 }
