@@ -1,5 +1,3 @@
-use crate::sort::insertion_sort;
-
 fn insertion_sort_in_gap<T>(slice: &mut [T], mut gap: usize)
 where
     T: PartialOrd,

@@ -1,5 +1,4 @@
 mod sort;
-mod tool;
 
 #[allow(unused_variables)]
 fn main() {

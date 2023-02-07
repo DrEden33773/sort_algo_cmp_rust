@@ -68,17 +68,11 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
         .unwrap();
     for (sort_name, sort_func) in sort_func_table {
         pool.install(|| {
-            // get clone
-            let mut to_sort = vec.clone();
-            // start time
+            let to_sort = vec.clone();
             let start_time = time::Instant::now();
-            // exec sort
-            sort_func(&mut to_sort);
-            // end time
+            sort_func(&mut to_sort.clone());
             let end_time = time::Instant::now();
-            // get duration
             let duration = end_time - start_time;
-            // println
             println!("{} => {}ms.\n", sort_name, duration.as_millis());
         });
     }
