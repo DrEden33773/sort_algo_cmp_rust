@@ -16,65 +16,43 @@ use radix_sort::radix_sort;
 use selection_sort::selection_sort;
 use shell_sort::shell_sort;
 
-use crate::tool::println_vec;
-use std::fmt::Display;
-use std::time;
-
 #[allow(dead_code)]
-pub fn dbg_non_radix_sorts<T>(vec: &Vec<T>)
-where
-    T: Display + PartialOrd + Copy,
-{
+pub fn debug_all_sorts(vec: &Vec<usize>) {
+    use std::time;
     println!();
-    let sort_func_table: Vec<(&str, fn(&mut Vec<T>))> = vec![
-        ("bubble_sort", bubble_sort),
-        ("insertion_sort", insertion_sort),
-        ("selection_sort", selection_sort),
-        ("shell_sort", shell_sort),
-        ("merge_sort", merge_sort),
+    let sort_func_table: Vec<(&str, fn(&mut [usize]))> = vec![
         ("quick_sort", quick_sort),
         ("heap_sort", heap_sort),
+        ("merge_sort", merge_sort),
+        ("radix_sort", radix_sort),
+        ("shell_sort", shell_sort),
+        ("selection_sort", selection_sort),
+        ("insertion_sort", insertion_sort),
+        ("bubble_sort", bubble_sort),
     ];
     for (sort_name, sort_func) in sort_func_table {
         // get clone
         let mut to_sort = vec.clone();
-        // show info
-        println!("`{}` test => ", sort_name);
-        println!();
+        // start time
+        let start_time = time::Instant::now();
         // exec sort
-        println_vec(&mut to_sort);
+        println!("before => {:?}", &to_sort);
         sort_func(&mut to_sort);
-        println_vec(&mut to_sort);
+        println!("after => {:?}", &to_sort);
+        // end time
+        let end_time = time::Instant::now();
+        // get duration
+        let duration = end_time - start_time;
         // println
-        println!();
-    }
-}
-
-#[allow(dead_code)]
-pub fn dbg_all_sorts(vec: &Vec<usize>) {
-    /* debug non_radix sorts at first */
-    dbg_non_radix_sorts(&vec);
-    /* then, debug radix_sort */
-    let additional_sort_func = vec![("radix_sort", radix_sort)];
-    for (sort_name, sort_func) in additional_sort_func {
-        // get clone
-        let mut to_sort = vec.clone();
-        // show info
-        println!("`{}` test => ", sort_name);
-        println!();
-        // exec sort
-        println_vec(&mut to_sort);
-        sort_func(&mut to_sort);
-        println_vec(&mut to_sort);
-        // println
-        println!();
+        println!("{} => {}ms.\n", sort_name, duration.as_millis());
     }
 }
 
 #[allow(dead_code)]
 pub fn benchmark_all_sorts(vec: &Vec<usize>) {
+    use std::time;
     println!();
-    let sort_func_table: Vec<(&str, fn(&mut Vec<usize>))> = vec![
+    let sort_func_table: Vec<(&str, fn(&mut [usize]))> = vec![
         ("quick_sort", quick_sort),
         ("heap_sort", heap_sort),
         ("merge_sort", merge_sort),
@@ -89,7 +67,7 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
         .build()
         .unwrap();
     for (sort_name, sort_func) in sort_func_table {
-        {
+        pool.install(|| {
             // get clone
             let mut to_sort = vec.clone();
             // start time
@@ -101,7 +79,7 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
             // get duration
             let duration = end_time - start_time;
             // println
-            println!("{} => {} seconds.\n", sort_name, duration.as_secs_f32());
-        };
+            println!("{} => {}ms.\n", sort_name, duration.as_millis());
+        });
     }
 }

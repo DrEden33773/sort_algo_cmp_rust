@@ -1,5 +1,5 @@
 /// selection_sort  
-pub fn selection_sort<T: PartialOrd>(vec: &mut Vec<T>) {
+pub fn selection_sort<T: PartialOrd>(vec: &mut [T]) {
     if vec.len() <= 1 {
         return;
     }

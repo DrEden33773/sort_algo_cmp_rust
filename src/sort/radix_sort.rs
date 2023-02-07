@@ -11,7 +11,7 @@ fn init_buckets() {
     }
 }
 
-fn get_max_len(vec: &mut Vec<usize>) -> usize {
+fn get_max_len(vec: &mut [usize]) -> usize {
     let mut max_len: usize = 0;
     for num_ref in vec {
         let mut num = num_ref.clone();
@@ -28,7 +28,7 @@ fn get_max_len(vec: &mut Vec<usize>) -> usize {
     max_len
 }
 
-fn build_buckets(to_sort: &mut Vec<usize>, pos: usize) {
+fn build_buckets(to_sort: &mut [usize], pos: usize) {
     if pos < 1 {
         panic!("expected position should >= 1, found {}", 0);
     }
@@ -45,7 +45,7 @@ fn build_buckets(to_sort: &mut Vec<usize>, pos: usize) {
     }
 }
 
-fn extract_from_buckets(to_sort: &mut Vec<usize>) {
+fn extract_from_buckets(to_sort: &mut [usize]) {
     let mut index: usize = 0;
     unsafe {
         for bucket in &BUCKETS {
@@ -70,7 +70,7 @@ fn clean_buckets() {
 /// Generic radix_sort is hard to implement.
 ///
 /// Now, `radix_sort` could only receive `Vec<u32>` as the only input.
-pub fn radix_sort(vec: &mut Vec<usize>) {
+pub fn radix_sort(vec: &mut [usize]) {
     init_buckets();
     let max_len = get_max_len(vec);
     for pos in 1..=max_len {

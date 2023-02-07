@@ -1,52 +1,43 @@
-fn merge<T>(vec: &mut Vec<T>, begin: usize, end: usize)
+fn merge<T>(slice: &mut [T])
 where
     T: PartialOrd + Copy,
 {
-    let mut temp: Vec<T> = Vec::new();
+    let mut temp: Vec<T> = Vec::with_capacity(slice.len());
 
-    let mid = (begin + end) / 2;
-    let mut left = begin;
+    let mid = (0 + slice.len() - 1) / 2;
+    let mut left = 0;
     let mut right = mid;
 
-    while left < mid && right < end {
-        if vec[left] < vec[right] {
-            temp.push(vec[left]);
+    while left < mid && right < slice.len() {
+        if slice[left] < slice[right] {
+            temp.push(slice[left]);
             left += 1;
         } else {
-            temp.push(vec[right]);
+            temp.push(slice[right]);
             right += 1;
         }
     }
     while left < mid {
-        temp.push(vec[left]);
+        temp.push(slice[left]);
         left += 1;
     }
-    while right < end {
-        temp.push(vec[right]);
+    while right < slice.len() {
+        temp.push(slice[right]);
         right += 1;
     }
 
     for index in 0..temp.len() {
-        vec[begin + index] = temp[index];
-    }
-}
-
-fn ms_helper<T>(vec: &mut Vec<T>, begin: usize, end: usize)
-where
-    T: PartialOrd + Copy,
-{
-    if begin + 1 < end {
-        let mid = (begin + end) / 2;
-        ms_helper(vec, begin, mid);
-        ms_helper(vec, mid, end);
-        merge(vec, begin, end);
+        slice[index] = temp[index];
     }
 }
 
 /// merge_sort
-pub fn merge_sort<T: PartialOrd + Copy>(vec: &mut Vec<T>) {
-    if vec.len() <= 1 {
+pub fn merge_sort<T: PartialOrd + Copy>(slice: &mut [T]) {
+    if slice.len() <= 1 {
         return;
     }
-    ms_helper(vec, 0, vec.len());
+    let mid = (0 + slice.len() - 1) / 2;
+    merge_sort(&mut slice[..mid]);
+    merge_sort(&mut slice[mid..]);
+    merge(slice);
 }

@@ -1,5 +1,5 @@
 /// bubble_sort
-pub fn bubble_sort<T: PartialOrd>(vec: &mut Vec<T>) {
+pub fn bubble_sort<T: PartialOrd>(vec: &mut [T]) {
     if vec.len() <= 1 {
         return;
     }

@@ -1,5 +1,5 @@
 /// insertion_sort
-pub fn insertion_sort<T: PartialOrd>(vec: &mut Vec<T>) {
+pub fn insertion_sort<T: PartialOrd>(vec: &mut [T]) {
     if vec.len() <= 1 {
         return;
     }

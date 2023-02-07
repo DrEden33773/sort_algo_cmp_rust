@@ -1,14 +1,16 @@
-fn make_heap<T: PartialOrd>(vec: &mut Vec<T>, root: usize, end: usize) {
+fn make_heap<T: PartialOrd>(slice: &mut [T]) {
+    let root = 0;
+    let end = slice.len() - 1;
     let mut dad = root;
     let mut son = 2 * dad + 1;
     while son < end {
         // 1. try to cmp two sons
-        if son + 1 < end && vec[son] < vec[son + 1] {
+        if son + 1 < end && slice[son] < slice[son + 1] {
             son += 1;
         }
         // 2. cmp dad and max_son
-        if vec[dad] < vec[son] {
-            vec.swap(dad, son);
+        if slice[dad] < slice[son] {
+            slice.swap(dad, son);
             dad = son;
             son = 2 * dad + 1;
         } else {
@@ -18,17 +20,17 @@ fn make_heap<T: PartialOrd>(vec: &mut Vec<T>, root: usize, end: usize) {
 }
 
 /// heap_sort
-pub fn heap_sort<T: PartialOrd>(vec: &mut Vec<T>) {
-    if vec.len() <= 1 {
+pub fn heap_sort<T: PartialOrd>(slice: &mut [T]) {
+    if slice.len() <= 1 {
         return;
     }
-    let end = vec.len();
+    let end = slice.len();
     let len = end;
     // find the last node with two leaves
     let mut root = len / 2 - 1;
     // basic heap
     loop {
-        make_heap(vec, root, end);
+        make_heap(&mut slice[root..]);
         if root == 0 {
             break;
         }
@@ -37,7 +39,7 @@ pub fn heap_sort<T: PartialOrd>(vec: &mut Vec<T>) {
     // adjust
     for end in (1..=len).rev() {
         let back = end - 1;
-        vec.swap(0, back);
-        make_heap(vec, 0, back);
+        slice.swap(0, back);
+        make_heap(&mut slice[..back]);
     }
 }
