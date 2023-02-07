@@ -49,7 +49,7 @@ pub fn debug_all_sorts(vec: &Vec<usize>) {
         println!("{} => {}ms.\n", sort_name, duration.as_millis());
         // check
         match if_ascending_ordered(&to_sort) {
-            true => {}
+            true => (),
             false => panic!("Error => {} is failed.", sort_name),
         }
     }
@@ -93,7 +93,7 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
             let duration = end_time - start_time;
             println!("{} => {}ms.", sort_name, duration.as_millis());
             match if_ascending_ordered(&to_sort) {
-                true => {}
+                true => (),
                 false => panic!("Error => {} is failed.", sort_name),
             }
         });
