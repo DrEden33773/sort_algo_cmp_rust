@@ -47,7 +47,21 @@ pub fn debug_all_sorts(vec: &Vec<usize>) {
         let duration = end_time - start_time;
         // println
         println!("{} => {}ms.\n", sort_name, duration.as_millis());
+        // check
+        match if_ascending_ordered(&to_sort) {
+            true => {}
+            false => panic!("Error => {} is failed.", sort_name),
+        }
     }
+}
+
+fn if_ascending_ordered<T: PartialOrd>(to_check: &[T]) -> bool {
+    for i in 0..to_check.len() - 1 {
+        if to_check[i] > to_check[i + 1] {
+            return false;
+        }
+    }
+    true
 }
 
 #[allow(dead_code)]
@@ -78,6 +92,10 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
             let end_time = time::Instant::now();
             let duration = end_time - start_time;
             println!("{} => {}ms.", sort_name, duration.as_millis());
+            match if_ascending_ordered(&to_sort) {
+                true => {}
+                false => panic!("Error => {} is failed.", sort_name),
+            }
         });
         // push handle
         handles.push(handle);

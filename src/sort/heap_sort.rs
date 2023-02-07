@@ -1,9 +1,8 @@
-fn make_heap<T: PartialOrd>(slice: &mut [T]) {
+fn make_heap<T: PartialOrd>(slice: &mut [T], root: usize) {
     if slice.len() <= 1 {
         return;
     }
-    let root = 0;
-    let end = slice.len() - 1;
+    let end = slice.len();
     let mut dad = root;
     let mut son = 2 * dad + 1;
     while son < end {
@@ -31,12 +30,11 @@ pub fn heap_sort<T: PartialOrd>(slice: &mut [T]) {
     let last_root = slice.len() / 2 - 1;
     // basic heap
     for root in (0..=last_root).rev() {
-        make_heap(&mut slice[root..]);
+        make_heap(&mut slice[..], root);
     }
     // adjust
-    for end in (1..=slice.len()).rev() {
-        let back = end - 1;
+    for back in (1..slice.len()).rev() {
         slice.swap(0, back);
-        make_heap(&mut slice[..back]);
+        make_heap(&mut slice[..back], 0);
     }
 }
