@@ -2,10 +2,6 @@ fn merge<T>(slice: &mut [T])
 where
     T: PartialOrd + Copy,
 {
-    if slice.len() <= 1 {
-        return;
-    }
-
     let mut temp: Vec<T> = Vec::with_capacity(slice.len());
 
     let mid = slice.len() / 2;
