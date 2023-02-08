@@ -46,12 +46,29 @@ where
     pivot
 }
 
+#[allow(dead_code)]
+fn modern_partition<T>(slice: &mut [T]) -> usize
+where
+    T: PartialOrd + Copy,
+{
+    let mut pivot: isize = -1;
+    let len = slice.len();
+    let last = slice[len - 1];
+    for curr in 0..len {
+        if slice[curr] <= last {
+            pivot += 1;
+            slice.swap(pivot as usize, curr);
+        }
+    }
+    pivot as usize
+}
+
 /// quick_sort
 pub fn quick_sort<T: PartialOrd + Copy>(slice: &mut [T]) {
     if slice.len() <= 1 {
         return;
     }
-    let pivot = partition(slice);
+    let pivot = modern_partition(slice);
     quick_sort(&mut slice[..pivot]);
     quick_sort(&mut slice[pivot + 1..]);
 }

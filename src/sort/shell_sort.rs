@@ -1,4 +1,4 @@
-fn insertion_sort_in_gap<T>(slice: &mut [T], mut gap: usize)
+fn insertion_sort_in_gap<T>(slice: &mut [T], gap: usize)
 where
     T: PartialOrd,
 {
@@ -16,8 +16,7 @@ pub fn shell_sort<T: PartialOrd>(slice: &mut [T]) {
     if slice.len() <= 1 {
         return;
     }
-    let gap = slice.len() / 2;
-    while gap > 0 {
+    for gap in [7, 5, 3, 1] {
         insertion_sort_in_gap(slice, gap);
     }
 }
