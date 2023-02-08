@@ -5,7 +5,7 @@ pub fn _insertion_sort<T: PartialOrd>(slice: &mut [T]) {
     }
     for from in 1..slice.len() {
         let mut cmp = from;
-        while cmp > 0 && slice[cmp - 1] > slice[cmp] {
+        while cmp >= 1 && slice[cmp - 1] > slice[cmp] {
             slice.swap(cmp - 1, cmp);
             cmp -= 1;
         }
