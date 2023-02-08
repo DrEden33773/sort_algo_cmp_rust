@@ -23,6 +23,6 @@ fn benchmark(times: usize) {
 }
 
 fn main() {
-    debug();
-    // benchmark(10);
+    // debug();
+    benchmark(10);
 }
