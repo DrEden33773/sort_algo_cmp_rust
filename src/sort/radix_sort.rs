@@ -67,7 +67,7 @@ fn clean_buckets() {
 ///
 /// Generic radix_sort is hard to implement.
 ///
-/// Now, `radix_sort` could only receive `Vec<u32>` as the only input.
+/// Now, `radix_sort` could only receive `Vec<usize>` as the only input.
 pub fn radix_sort(to_sort: &mut [usize]) {
     init_buckets();
     let max_len = get_max_len(to_sort);
