@@ -16,8 +16,8 @@ pub fn shell_sort<T: PartialOrd>(slice: &mut [T]) {
     if slice.len() <= 1 {
         return;
     }
-    insertion_sort_in_gap(slice, 7);
-    insertion_sort_in_gap(slice, 5);
-    insertion_sort_in_gap(slice, 3);
-    insertion_sort_in_gap(slice, 1);
+    let gap = slice.len() / 2;
+    while gap > 0 {
+        insertion_sort_in_gap(slice, gap);
+    }
 }
