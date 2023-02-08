@@ -1,3 +1,4 @@
+/// modernized one
 fn insertion_sort_with_gap<T>(slice: &mut [T], gap: usize)
 where
     T: PartialOrd,
@@ -9,6 +10,20 @@ where
             } else {
                 break;
             }
+        }
+    }
+}
+
+/// equivalent one (not that modernized)
+fn _insertion_sort_with_gap<T>(slice: &mut [T], gap: usize)
+where
+    T: PartialOrd,
+{
+    for from in gap..slice.len() {
+        let mut cmp = from;
+        while cmp >= gap && slice[cmp - gap] > slice[cmp] {
+            slice.swap(cmp - gap, cmp);
+            cmp -= gap;
         }
     }
 }
