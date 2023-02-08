@@ -5,7 +5,6 @@ where
     if gap >= slice.len() {
         return;
     }
-    gap = if gap < 1 { 1 } else { gap };
     for from in (0..slice.len()).step_by(gap) {
         for cmp in (gap..=from).rev().step_by(gap) {
             if slice[cmp - gap] > slice[cmp] {
