@@ -79,10 +79,10 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
     let mut handles = Vec::with_capacity(sort_func_table.len());
     for (sort_name, sort_func) in sort_func_table {
         // get clone
-        let to_sort = vec.clone();
+        let copy_of_vec = vec.clone();
         // exec sort
         let handle = thread::spawn(move || {
-            let mut to_sort = to_sort;
+            let mut to_sort = copy_of_vec; // won't copy, only move
             let start_time = time::Instant::now();
             sort_func(&mut to_sort);
             let end_time = time::Instant::now();

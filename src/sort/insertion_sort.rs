@@ -7,6 +7,8 @@ pub fn insertion_sort<T: PartialOrd>(slice: &mut [T]) {
         for cmp in (1..=from).rev() {
             if slice[cmp - 1] > slice[cmp] {
                 slice.swap(cmp - 1, cmp);
+            } else {
+                break;
             }
         }
     }
