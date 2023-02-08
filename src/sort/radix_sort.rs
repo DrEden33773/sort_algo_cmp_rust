@@ -29,9 +29,7 @@ fn get_max_len(vec: &mut [usize]) -> usize {
 }
 
 fn build_buckets(to_sort: &mut [usize], pos: usize) {
-    if pos < 1 {
-        panic!("expected position should >= 1, found {}", 0);
-    }
+    // pos should >= 1
     for num_ref in to_sort {
         let mut num = num_ref.clone();
         let mut identifier: usize = 0;
