@@ -9,13 +9,13 @@ where
     let mut right = mid;
 
     while left < mid && right < slice.len() {
-        if slice[left] < slice[right] {
-            temp.push(slice[left]);
-            left += 1;
+        let the_less = if slice[left] < slice[right] {
+            &mut left
         } else {
-            temp.push(slice[right]);
-            right += 1;
-        }
+            &mut right
+        };
+        temp.push(slice[*the_less]);
+        *the_less += 1;
     }
     while left < mid {
         temp.push(slice[left]);
