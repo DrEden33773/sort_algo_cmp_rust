@@ -16,6 +16,8 @@ use radix_sort::radix_sort;
 use selection_sort::selection_sort;
 use shell_sort::shell_sort;
 
+use std::collections::HashMap;
+use std::sync::mpsc;
 use std::thread;
 use std::time;
 
@@ -61,7 +63,7 @@ pub fn debug_all_sorts(vec: &Vec<usize>) {
     }
 }
 
-pub fn benchmark_all_sorts(vec: &Vec<usize>) {
+pub fn benchmark_all_sorts(vec: &Vec<usize>) -> HashMap<&'static str, time::Duration> {
     // start with newline
     println!();
     // all sort algorithms
@@ -75,30 +77,46 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) {
         ("radix_sort", radix_sort),
         ("quick_sort", quick_sort),
     ];
+    // message channel
+    let (_tx, rx) = mpsc::channel();
     // benchmark all sort algorithms in multiple threads
-    let mut handles = Vec::with_capacity(sort_func_table.len());
     for (sort_name, sort_func) in sort_func_table {
-        // get clone
+        // get clone of tx
+        let tx = _tx.clone();
+        // get clone of vec
         let copy_of_vec = vec.clone();
         // exec sort
-        let handle = thread::spawn(move || {
+        thread::spawn(move || {
             let mut to_sort = copy_of_vec; // won't copy, only move
             let start_time = time::Instant::now();
             sort_func(&mut to_sort);
             let end_time = time::Instant::now();
             let duration = end_time - start_time;
-            match if_ascending_ordered(&to_sort) {
-                true => println!("{} => {}ms.", sort_name, duration.as_millis()),
-                false => println!("{} => failed.", sort_name),
+            let (_, duration) = match if_ascending_ordered(&to_sort) {
+                true => {
+                    println!("{} => {}ms.", sort_name, duration.as_millis());
+                    (sort_name, Some(duration))
+                }
+                false => {
+                    println!("{} => failed.", sort_name);
+                    (sort_name, None)
+                }
             };
+            // send the message
+            tx.send((sort_name, duration)).unwrap();
         });
-        // push the handle
-        handles.push(handle);
     }
-    // wait for all threads to finish
-    for handle in handles {
-        handle.join().unwrap();
-    }
+    // (_tx, rx)'s _tx => never used, only been cloned, won't use again
+    // We should drop it, or the channel will never close.
+    drop(_tx);
+    // get `name_duration_hash_map`
+    let name_duration_map = rx
+        .iter()
+        .filter(|(_, duration)| duration.is_some())
+        .map(|(name, duration)| (name, duration.unwrap()))
+        .collect::<HashMap<_, _>>();
     // end with newline
     println!();
+    // return the map
+    name_duration_map
 }
