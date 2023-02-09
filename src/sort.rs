@@ -106,7 +106,7 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) -> HashMap<&'static str, time::Dura
             tx.send((sort_name, duration)).unwrap();
         });
     }
-    // (_tx, rx)'s _tx => never used, only been cloned, won't use again
+    // Note: (_tx, rx)'s _tx => never used, only been cloned, won't use again
     // We should drop it, or the channel will never close.
     drop(_tx);
     // get `name_duration_hash_map`
@@ -115,6 +115,13 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) -> HashMap<&'static str, time::Dura
         .filter(|(_, duration)| duration.is_some())
         .map(|(name, duration)| (name, duration.unwrap()))
         .collect::<HashMap<_, _>>();
+    // equivalent `get map` code:
+    let mut equivalent_map = HashMap::new();
+    for (name, duration) in rx {
+        if duration.is_some() {
+            equivalent_map.insert(name, duration.unwrap());
+        }
+    }
     // end with newline
     println!();
     // return the map
