@@ -53,15 +53,12 @@ fn benchmark(times: usize, if_add_special_sample: bool) {
             map_of_sum = sort::benchmark_all_sorts(&to_sort).into_iter().fold(
                 map_of_sum,
                 |mut map, (key, value)| {
-                    match map.get_mut(key) {
-                        Some((count, duration)) => {
+                    map.entry(key)
+                        .and_modify(|(count, duration)| {
                             *count += 1;
                             *duration += value;
-                        }
-                        None => {
-                            map.insert(key, (1, value));
-                        }
-                    }
+                        })
+                        .or_insert((1, value));
                     map
                 },
             );
