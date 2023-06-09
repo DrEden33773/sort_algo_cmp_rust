@@ -12,7 +12,7 @@ use heap_sort::heap_sort;
 use insertion_sort::insertion_sort;
 use merge_sort::merge_sort;
 use quick_sort::quick_sort;
-use radix_sort::radix_sort;
+use radix_sort::usize_radix_sort;
 use selection_sort::selection_sort;
 use shell_sort::shell_sort;
 
@@ -40,7 +40,7 @@ pub fn debug_all_sorts(vec: &[usize]) {
         ("shell_sort", shell_sort),
         ("merge_sort", merge_sort),
         ("heap_sort", heap_sort),
-        ("radix_sort", radix_sort),
+        ("radix_sort", usize_radix_sort),
         ("quick_sort", quick_sort),
     ];
     for (sort_name, sort_func) in sort_func_table {
@@ -76,7 +76,7 @@ pub fn benchmark_all_sorts(vec: &[usize]) -> HashMap<&'static str, time::Duratio
         ("shell_sort", shell_sort),
         ("merge_sort", merge_sort),
         ("heap_sort", heap_sort),
-        ("radix_sort", radix_sort),
+        ("radix_sort", usize_radix_sort),
         ("quick_sort", quick_sort),
     ];
     // message channel
