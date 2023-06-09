@@ -1,16 +1,11 @@
 const RADIX: usize = 10;
 
-type BasicSortableType = usize;
+type BaseType = usize;
 
-static mut BUCKETS: Vec<Vec<usize>> = Vec::new();
+type BaseBucketsRef<'a> = &'a mut [Vec<usize>];
 
-fn init_buckets() {
-    unsafe {
-        BUCKETS = Vec::with_capacity(RADIX);
-        for _ in 0..RADIX {
-            BUCKETS.push(Vec::new());
-        }
-    }
+fn create_buckets() -> Vec<Vec<usize>> {
+    (0..RADIX).map(|_| Vec::new()).collect()
 }
 
 fn get_max_len(vec: &mut [usize]) -> usize {
@@ -30,7 +25,7 @@ fn get_max_len(vec: &mut [usize]) -> usize {
     max_len
 }
 
-fn build_buckets(to_sort: &mut [usize], pos: usize) {
+fn build_buckets(to_sort: &mut [usize], pos: usize, buckets: BaseBucketsRef) {
     // pos should >= 1
     for num_ref in to_sort {
         let mut num = *num_ref;
@@ -39,16 +34,14 @@ fn build_buckets(to_sort: &mut [usize], pos: usize) {
             identifier = num % RADIX;
             num /= RADIX;
         }
-        unsafe {
-            BUCKETS[identifier].push(*num_ref);
-        }
+        buckets[identifier].push(*num_ref);
     }
 }
 
-fn extract_from_buckets(to_sort: &mut [usize]) {
+fn extract_from_buckets(to_sort: &mut [usize], buckets: BaseBucketsRef) {
     let mut index: usize = 0;
-    unsafe {
-        for bucket in &BUCKETS {
+    {
+        for bucket in buckets {
             for num in bucket {
                 to_sort[index] = *num;
                 index += 1;
@@ -57,11 +50,9 @@ fn extract_from_buckets(to_sort: &mut [usize]) {
     }
 }
 
-fn clean_buckets() {
-    unsafe {
-        for bucket in &mut BUCKETS {
-            bucket.clear();
-        }
+fn clean_buckets(buckets: BaseBucketsRef) {
+    for bucket in buckets {
+        bucket.clear();
     }
 }
 
@@ -89,12 +80,12 @@ fn clean_buckets() {
 /// - `u64`
 /// - `usize`
 pub fn usize_radix_sort(to_sort: &mut [usize]) {
-    init_buckets();
+    let mut buckets: Vec<Vec<usize>> = create_buckets();
     let max_len = get_max_len(to_sort);
     for pos in 1..=max_len {
-        build_buckets(to_sort, pos);
-        extract_from_buckets(to_sort);
-        clean_buckets();
+        build_buckets(to_sort, pos, &mut buckets);
+        extract_from_buckets(to_sort, &mut buckets);
+        clean_buckets(&mut buckets);
     }
 }
 
@@ -109,7 +100,7 @@ macro_rules! impl_radix_sortable_for_unsigned {
                 fn radix_sort(&mut self) {
                     let mut to_sort = self
                         .iter()
-                        .map(|&num| num as BasicSortableType)
+                        .map(|&num| num as BaseType)
                         .collect::<Vec<_>>();
                     usize_radix_sort(&mut to_sort);
                     for (index, num) in to_sort.iter().enumerate() {
@@ -128,11 +119,11 @@ macro_rules! impl_radix_sortable_for_signed {
                 fn radix_sort(&mut self) {
                     let mut non_negatives = self
                         .iter()
-                        .filter_map(|&num| if num >= 0 { Some(num as BasicSortableType) } else { None })
+                        .filter_map(|&num| if num >= 0 { Some(num as BaseType) } else { None })
                         .collect::<Vec<_>>();
                     let mut negatives = self
                         .iter()
-                        .filter_map(|&num| if num < 0 { Some(-num as BasicSortableType) } else { None })
+                        .filter_map(|&num| if num < 0 { Some(-num as BaseType) } else { None })
                         .collect::<Vec<_>>();
                     usize_radix_sort(&mut non_negatives);
                     usize_radix_sort(&mut negatives);
@@ -194,7 +185,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "We will test this in `test_radix_sort()`"]
     fn test_usize_radix_sort() {
         let mut vec = (0..100)
             .map(|_| rand::thread_rng().gen_range(0..100))
