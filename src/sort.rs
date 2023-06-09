@@ -30,9 +30,10 @@ fn if_ascending_ordered<T: PartialOrd>(to_check: &[T]) -> bool {
     true
 }
 
-pub fn debug_all_sorts(vec: &Vec<usize>) {
+pub fn debug_all_sorts(vec: &[usize]) {
     println!();
-    let sort_func_table: Vec<(&str, fn(&mut [usize]))> = vec![
+    type NameFuncPair = (&'static str, fn(&mut [usize]));
+    let sort_func_table: Vec<NameFuncPair> = vec![
         ("bubble_sort", bubble_sort),
         ("selection_sort", selection_sort),
         ("insertion_sort", insertion_sort),
@@ -44,7 +45,7 @@ pub fn debug_all_sorts(vec: &Vec<usize>) {
     ];
     for (sort_name, sort_func) in sort_func_table {
         // get clone
-        let mut to_sort = vec.clone();
+        let mut to_sort = Vec::from(vec);
         // start time
         let start_time = time::Instant::now();
         // exec sort
@@ -63,11 +64,12 @@ pub fn debug_all_sorts(vec: &Vec<usize>) {
     }
 }
 
-pub fn benchmark_all_sorts(vec: &Vec<usize>) -> HashMap<&'static str, time::Duration> {
+pub fn benchmark_all_sorts(vec: &[usize]) -> HashMap<&'static str, time::Duration> {
     // start with newline
     println!();
     // all sort algorithms
-    let sort_func_table: Vec<(&str, fn(&mut [usize]))> = vec![
+    type NameFuncPair = (&'static str, fn(&mut [usize]));
+    let sort_func_table: Vec<NameFuncPair> = vec![
         ("bubble_sort", bubble_sort),
         ("selection_sort", selection_sort),
         ("insertion_sort", insertion_sort),
@@ -84,7 +86,7 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) -> HashMap<&'static str, time::Dura
         // get clone of tx
         let tx = _tx.clone();
         // get clone of vec
-        let copy_of_vec = vec.clone();
+        let copy_of_vec = Vec::from(vec);
         // exec sort
         thread::spawn(move || {
             let mut to_sort = copy_of_vec; // won't copy, only move
@@ -118,8 +120,8 @@ pub fn benchmark_all_sorts(vec: &Vec<usize>) -> HashMap<&'static str, time::Dura
     // equivalent `get map` code:
     let mut equivalent_map = HashMap::new();
     for (name, duration) in rx {
-        if duration.is_some() {
-            equivalent_map.insert(name, duration.unwrap());
+        if let Some(duration) = duration {
+            equivalent_map.insert(name, duration);
         }
     }
     // end with newline

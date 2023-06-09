@@ -6,7 +6,7 @@ where
     let mut front = 0;
     let mut back = slice.len() - 1;
     let mut pivot = front;
-    let pivot_val = slice[pivot].clone();
+    let pivot_val = slice[pivot];
     while front < back {
         while front < back && slice[back] >= pivot_val {
             back -= 1;

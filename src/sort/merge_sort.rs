@@ -26,9 +26,7 @@ where
         right += 1;
     }
 
-    for index in 0..temp.len() {
-        slice[index] = temp[index];
-    }
+    slice[..temp.len()].copy_from_slice(&temp[..]);
 }
 
 /// merge_sort

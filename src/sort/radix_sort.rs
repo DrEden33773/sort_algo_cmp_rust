@@ -14,7 +14,7 @@ fn init_buckets() {
 fn get_max_len(vec: &mut [usize]) -> usize {
     let mut max_len: usize = 0;
     for num_ref in vec {
-        let mut num = num_ref.clone();
+        let mut num = *num_ref;
         let len = {
             let mut len = 0;
             while num > 0 {
@@ -31,7 +31,7 @@ fn get_max_len(vec: &mut [usize]) -> usize {
 fn build_buckets(to_sort: &mut [usize], pos: usize) {
     // pos should >= 1
     for num_ref in to_sort {
-        let mut num = num_ref.clone();
+        let mut num = *num_ref;
         let mut identifier: usize = 0;
         for _current_pos in (1..=pos).rev() {
             identifier = num % RADIX;
