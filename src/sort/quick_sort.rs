@@ -1,3 +1,5 @@
+use rand::Rng;
+
 #[allow(dead_code)]
 fn legacy_partition<T>(slice: &mut [T]) -> usize
 where
@@ -46,6 +48,12 @@ where
     pivot
 }
 
+/// # Modern Partition
+///
+/// ## Randomized
+///
+/// This `partition` procedure has been `randomized`,
+/// with the worst case of `T(n) = O(nlogn)`
 #[allow(dead_code)]
 fn modern_partition<T>(slice: &mut [T]) -> usize
 where
@@ -53,9 +61,10 @@ where
 {
     let mut pivot: isize = -1;
     let len = slice.len();
-    let last = slice[len - 1];
+    let temp = rand::thread_rng().gen_range(0..len);
+    slice.swap(temp, len - 1);
     for curr in 0..len {
-        if slice[curr] <= last {
+        if slice[curr] <= slice[len - 1] {
             pivot += 1;
             slice.swap(pivot as usize, curr);
         }
