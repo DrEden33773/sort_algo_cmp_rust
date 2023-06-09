@@ -1,4 +1,5 @@
 mod bubble_sort;
+mod bucket_sort;
 mod heap_sort;
 mod insertion_sort;
 mod merge_sort;
@@ -8,6 +9,7 @@ mod selection_sort;
 mod shell_sort;
 
 use bubble_sort::bubble_sort;
+use bucket_sort::usize_bucket_sort_adaptive_forward;
 use heap_sort::heap_sort;
 use insertion_sort::insertion_sort;
 use merge_sort::merge_sort;
@@ -42,6 +44,7 @@ pub fn debug_all_sorts(vec: &[usize]) {
         ("heap_sort", heap_sort),
         ("radix_sort", usize_radix_sort),
         ("quick_sort", quick_sort),
+        ("bucket_sort", usize_bucket_sort_adaptive_forward),
     ];
     for (sort_name, sort_func) in sort_func_table {
         // get clone
@@ -78,6 +81,7 @@ pub fn benchmark_all_sorts(vec: &[usize]) -> HashMap<&'static str, time::Duratio
         ("heap_sort", heap_sort),
         ("radix_sort", usize_radix_sort),
         ("quick_sort", quick_sort),
+        ("bucket_sort", usize_bucket_sort_adaptive_forward),
     ];
     // message channel
     let (_tx, rx) = mpsc::channel();
@@ -141,6 +145,6 @@ mod tests {
             .map(|_| rand::thread_rng().gen_range(0..100))
             .collect::<Vec<usize>>();
         let name_duration_map = benchmark_all_sorts(&vec);
-        assert_eq!(name_duration_map.len(), 8);
+        assert_eq!(name_duration_map.len(), 9);
     }
 }

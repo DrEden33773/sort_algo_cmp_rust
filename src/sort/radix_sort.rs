@@ -89,7 +89,7 @@ pub fn usize_radix_sort(to_sort: &mut [usize]) {
     }
 }
 
-trait RadixSortable: Sized {
+pub trait RadixSortable: Sized {
     fn radix_sort(&mut self);
 }
 
