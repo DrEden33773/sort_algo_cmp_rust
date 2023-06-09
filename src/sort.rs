@@ -16,6 +16,7 @@ use radix_sort::radix_sort;
 use selection_sort::selection_sort;
 use shell_sort::shell_sort;
 
+use rand::Rng;
 use std::collections::HashMap;
 use std::sync::mpsc;
 use std::thread;
@@ -128,4 +129,18 @@ pub fn benchmark_all_sorts(vec: &[usize]) -> HashMap<&'static str, time::Duratio
     println!();
     // return the map
     name_duration_map
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_all_sorts() {
+        let vec = (0..15)
+            .map(|_| rand::thread_rng().gen_range(0..100))
+            .collect::<Vec<usize>>();
+        let name_duration_map = benchmark_all_sorts(&vec);
+        assert_eq!(name_duration_map.len(), 8);
+    }
 }
