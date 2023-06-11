@@ -81,3 +81,60 @@ pub fn quick_sort<T: PartialOrd + Copy>(slice: &mut [T]) {
     quick_sort(&mut slice[..pivot]);
     quick_sort(&mut slice[pivot + 1..]);
 }
+
+/// quick_select
+#[allow(dead_code)]
+pub fn quick_select<T>(slice: &[T], nth: usize) -> Option<T>
+where
+    T: PartialOrd + Clone,
+{
+    let sep = &slice[rand::thread_rng().gen_range(0..slice.len())];
+    let lt = slice.iter().pick_by(|x| x < sep);
+    let eq = slice.iter().pick_by(|x| x == sep);
+    let gt = slice.iter().pick_by(|x| x > sep);
+    let (l, e, g) = (lt.len(), eq.len(), gt.len());
+    match nth {
+        i if i < l => quick_select(&lt, nth),
+        i if i < l + e => Some(eq.first().unwrap().clone()),
+        i if i < l + e + g => quick_select(&gt, nth - l - e),
+        _ => None,
+    }
+}
+
+pub trait PickBy<'a, T>: Iterator<Item = &'a T> + Sized
+where
+    T: 'a + Clone,
+{
+    fn pick_by<F>(self, f: F) -> Vec<T>
+    where
+        F: Fn(&T) -> bool,
+    {
+        self.filter_map(|x| if f(x) { Some(x.clone()) } else { None })
+            .collect()
+    }
+}
+
+impl<'a, T, I> PickBy<'a, T> for I
+where
+    T: 'a + Clone,
+    I: Iterator<Item = &'a T>,
+{
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_quick_select() {
+        let mut arr = [1, 3, 2, 5, 4];
+        for index in 0..(arr.len() + 1) {
+            let ans = quick_select(&arr, index);
+            let expected = {
+                arr.sort();
+                arr.get(index).cloned()
+            };
+            assert_eq!(ans, expected);
+        }
+    }
+}

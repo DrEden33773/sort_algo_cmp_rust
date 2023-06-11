@@ -2,7 +2,7 @@ fn merge<T>(slice: &mut [T])
 where
     T: PartialOrd + Copy,
 {
-    let mut temp: Vec<T> = Vec::with_capacity(slice.len());
+    let mut temp = Vec::with_capacity(slice.len());
 
     let mid = slice.len() / 2;
     let mut left = 0;
@@ -26,7 +26,7 @@ where
         right += 1;
     }
 
-    slice[..temp.len()].copy_from_slice(&temp[..]);
+    slice[..temp.len()].copy_from_slice(&temp);
 }
 
 /// merge_sort

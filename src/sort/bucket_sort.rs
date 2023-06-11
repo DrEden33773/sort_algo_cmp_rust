@@ -35,7 +35,7 @@ fn bucket_sort_for_01_rv(s: &mut [f64]) -> Result<(), Box<dyn Error>> {
     let mut buckets = vec![vec![]; n];
     for &num in s.iter() {
         if !(0.0..1.0).contains(&num) {
-            return Err(format!("{num} out of range").into());
+            return Err(format!("{num} out of range (0.0 .. 1.0)").into());
         }
         let index = (num * n as f64) as usize;
         buckets[index].push(num);
@@ -98,14 +98,14 @@ pub fn usize_bucket_sort_adaptive_forward(to_sort: &mut [usize]) {
     bucket_sort_helper(to_sort).unwrap();
 }
 
-pub trait BucketSortable: Sized {
+pub trait BucketSortable {
     fn bucket_sort(&mut self) -> Result<(), Box<dyn Error>>;
 }
 
 macro_rules! impl_bucket_sortable_for_unsigned {
     ($($type:ty),*) => {
         $(
-            impl BucketSortable for Vec<$type> {
+            impl BucketSortable for [$type] {
                 fn bucket_sort(&mut self) -> Result<(), Box<dyn Error>> {
                     let mut to_sort = self
                         .iter()
@@ -125,7 +125,7 @@ macro_rules! impl_bucket_sortable_for_unsigned {
 macro_rules! impl_bucket_sortable_for_signed {
     ($($type:ty),*) => {
         $(
-            impl BucketSortable for Vec<$type> {
+            impl BucketSortable for [$type] {
                 fn bucket_sort(&mut self) -> Result<(), Box<dyn Error>> {
                     let mut non_negatives = self
                         .iter()
@@ -153,7 +153,7 @@ macro_rules! impl_bucket_sortable_for_signed {
 
 macro_rules! impl_bucket_sortable_for_usize {
     () => {
-        impl BucketSortable for Vec<usize> {
+        impl BucketSortable for [usize] {
             fn bucket_sort(&mut self) -> Result<(), Box<dyn Error>> {
                 usize_bucket_sort(self)
             }

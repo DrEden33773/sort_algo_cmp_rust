@@ -89,14 +89,14 @@ pub fn usize_radix_sort(to_sort: &mut [usize]) {
     }
 }
 
-pub trait RadixSortable: Sized {
+pub trait RadixSortable {
     fn radix_sort(&mut self);
 }
 
 macro_rules! impl_radix_sortable_for_unsigned {
     ($($type:ty),*) => {
         $(
-            impl RadixSortable for Vec<$type> {
+            impl RadixSortable for [$type] {
                 fn radix_sort(&mut self) {
                     let mut to_sort = self
                         .iter()
@@ -115,7 +115,7 @@ macro_rules! impl_radix_sortable_for_unsigned {
 macro_rules! impl_radix_sortable_for_signed {
     ($($type:ty),*) => {
         $(
-            impl RadixSortable for Vec<$type> {
+            impl RadixSortable for [$type] {
                 fn radix_sort(&mut self) {
                     let mut non_negatives = self
                         .iter()
@@ -142,7 +142,7 @@ macro_rules! impl_radix_sortable_for_signed {
 
 macro_rules! impl_radix_sortable_for_usize {
     () => {
-        impl RadixSortable for Vec<usize> {
+        impl RadixSortable for [usize] {
             fn radix_sort(&mut self) {
                 usize_radix_sort(self);
             }
