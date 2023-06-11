@@ -1,3 +1,31 @@
+/*!
+
+# Bucket Sort
+
+**First**, implement `bucket_sort_for_01_rv` only suits `&mut [f64]` with each element in (0..1)
+
+**Then**, implement `usize_bucket_sort`, with process below:
+
+1. `&mut [usize]` -> `&mut [f64]` `::` div `max_decimal_digit_len` foreach
+2. sort `&mut [f64]` with `bucket_sort_for_01_rv`
+3. `&mut [f64]` -> `&mut [usize]` `::` mul `max_decimal_digit_len` foreach
+
+**Finally**, implement `trait BucketSortable: Sized` with `fn bucket_sort(&mut self)`
+
+- `Macros` are in need while dealing with **Finally** step
+
+In the end, you could execute like this:
+
+```rust
+use algorithm::sort::bucket_sort::BucketSortable;
+
+let mut to_sort = vec![5, 1, 3, 2, 4];
+to_sort.bucket_sort();
+assert_eq!(to_sort, vec![1, 2, 3, 4, 5]);
+```
+
+*/
+
 #![allow(dead_code)]
 
 use std::error::Error;
@@ -5,20 +33,20 @@ use std::error::Error;
 fn bucket_sort_for_01_rv(s: &mut [f64]) -> Result<(), Box<dyn Error>> {
     let n = s.len();
     let mut buckets = vec![vec![]; n];
-    for num in s.iter() {
-        if *num < 0.0 || *num >= 1.0 {
+    for &num in s.iter() {
+        if !(0.0..1.0).contains(&num) {
             return Err(format!("{num} out of range").into());
         }
         let index = (num * n as f64) as usize;
-        buckets[index].push(*num);
+        buckets[index].push(num);
     }
     for bucket in buckets.iter_mut() {
         bucket.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
     }
     let mut index = 0;
     for bucket in buckets.iter() {
-        for num in bucket.iter() {
-            s[index] = *num;
+        for &num in bucket.iter() {
+            s[index] = num;
             index += 1;
         }
     }
@@ -42,16 +70,16 @@ fn shrink_to_01_range(s: &mut [usize]) -> (Vec<f64>, i32) {
     }
     let s_01 = s
         .iter()
-        .map(|num| *num as f64 / 10_f64.powi(max_decimal_digit))
+        .map(|&num| num as f64 / 10_f64.powi(max_decimal_digit))
         .collect();
     (s_01, max_decimal_digit)
 }
 
 fn bucket_sort_helper(to_sort: &mut [usize]) -> Result<(), Box<dyn Error>> {
-    let (mut s_01, max_integer_digit) = shrink_to_01_range(to_sort);
+    let (mut s_01, max_decimal_digit) = shrink_to_01_range(to_sort);
     bucket_sort_for_01_rv(&mut s_01)?;
     for (index, &num) in s_01.iter().enumerate() {
-        to_sort[index] = (num * 10_f64.powi(max_integer_digit)) as usize;
+        to_sort[index] = (num * 10_f64.powi(max_decimal_digit)) as usize;
     }
     Ok(())
 }
@@ -84,8 +112,8 @@ macro_rules! impl_bucket_sortable_for_unsigned {
                         .map(|&num| num as usize)
                         .collect::<Vec<_>>();
                     usize_bucket_sort(&mut to_sort)?;
-                    for (index, num) in to_sort.iter().enumerate() {
-                        self[index] = *num as $type;
+                    for (index, &num) in to_sort.iter().enumerate() {
+                        self[index] = num as $type;
                     }
                     Ok(())
                 }
@@ -110,11 +138,11 @@ macro_rules! impl_bucket_sortable_for_signed {
                     usize_bucket_sort(&mut non_negatives)?;
                     usize_bucket_sort(&mut negatives)?;
                     negatives.reverse();
-                    for (index, num) in negatives.iter().enumerate() {
-                        self[index] = -(*num as $type);
+                    for (index, &num) in negatives.iter().enumerate() {
+                        self[index] = -(num as $type);
                     }
-                    for (index, num) in non_negatives.iter().enumerate() {
-                        self[index + negatives.len()] = *num as $type;
+                    for (index, &num) in non_negatives.iter().enumerate() {
+                        self[index + negatives.len()] = num as $type;
                     }
                     Ok(())
                 }

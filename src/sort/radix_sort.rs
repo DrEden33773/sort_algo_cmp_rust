@@ -103,8 +103,8 @@ macro_rules! impl_radix_sortable_for_unsigned {
                         .map(|&num| num as BaseType)
                         .collect::<Vec<_>>();
                     usize_radix_sort(&mut to_sort);
-                    for (index, num) in to_sort.iter().enumerate() {
-                        self[index] = *num as $type;
+                    for (index, &num) in to_sort.iter().enumerate() {
+                        self[index] = num as $type;
                     }
                 }
             }
@@ -128,11 +128,11 @@ macro_rules! impl_radix_sortable_for_signed {
                     usize_radix_sort(&mut non_negatives);
                     usize_radix_sort(&mut negatives);
                     negatives.reverse();
-                    for (index, num) in negatives.iter().enumerate() {
-                        self[index] = -(*num as $type);
+                    for (index, &num) in negatives.iter().enumerate() {
+                        self[index] = -(num as $type);
                     }
-                    for (index, num) in non_negatives.iter().enumerate() {
-                        self[index + negatives.len()] = *num as $type;
+                    for (index, &num) in non_negatives.iter().enumerate() {
+                        self[index + negatives.len()] = num as $type;
                     }
                 }
             }
