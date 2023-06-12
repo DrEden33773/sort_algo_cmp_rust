@@ -48,9 +48,9 @@ where
     pivot
 }
 
-/// # Modern Partition
+/// ## Modern Partition
 ///
-/// ## Randomized
+/// ### Randomized
 ///
 /// This `partition` procedure has been `randomized`,
 /// with the worst case of `T(n) = O(nlogn)`
@@ -82,7 +82,11 @@ pub fn quick_sort<T: PartialOrd + Copy>(slice: &mut [T]) {
     quick_sort(&mut slice[pivot + 1..]);
 }
 
-/// quick_select
+/// ## Quick Select
+///
+/// ### Randomized
+///
+/// with the `worst` case of `T(n) = O(n)`
 #[allow(dead_code)]
 pub fn quick_select<T>(slice: &[T], nth: usize) -> Option<T>
 where
@@ -95,31 +99,20 @@ where
     let (l, e, g) = (lt.len(), eq.len(), gt.len());
     match nth {
         i if i < l => quick_select(&lt, nth),
-        i if i < l + e => Some(eq.first().unwrap().clone()),
+        i if i < l + e => Some(eq[0].clone()),
         i if i < l + e + g => quick_select(&gt, nth - l - e),
         _ => None,
     }
 }
 
-pub trait PickBy<'a, T>: Iterator<Item = &'a T> + Sized
-where
-    T: 'a + Clone,
-{
-    fn pick_by<F>(self, f: F) -> Vec<T>
-    where
-        F: Fn(&T) -> bool,
-    {
+pub trait PickBy<'a, T: 'a + Clone>: Iterator<Item = &'a T> + Sized {
+    fn pick_by<F: Fn(&T) -> bool>(self, f: F) -> Vec<T> {
         self.filter_map(|x| if f(x) { Some(x.clone()) } else { None })
             .collect()
     }
 }
 
-impl<'a, T, I> PickBy<'a, T> for I
-where
-    T: 'a + Clone,
-    I: Iterator<Item = &'a T>,
-{
-}
+impl<'a, T: 'a + Clone, I: Iterator<Item = &'a T>> PickBy<'a, T> for I {}
 
 #[cfg(test)]
 mod tests {
