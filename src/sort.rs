@@ -5,6 +5,7 @@ mod insertion_sort;
 mod merge_sort;
 mod quick_sort;
 mod radix_sort;
+mod rust_sort;
 mod selection_sort;
 mod shell_sort;
 
@@ -22,6 +23,8 @@ use std::collections::HashMap;
 use std::sync::mpsc;
 use std::thread;
 use std::time;
+
+use crate::sort::rust_sort::rust_dafault_sort;
 
 fn if_ascending_ordered<T: PartialOrd>(to_check: &[T]) -> bool {
     for (left, right) in to_check.windows(2).map(|s| (&s[0], &s[1])) {
@@ -45,6 +48,7 @@ pub fn debug_all_sorts(vec: &[usize]) {
         ("radix_sort", usize_radix_sort),
         ("quick_sort", quick_sort),
         ("bucket_sort", usize_bucket_sort_adaptive_forward),
+        ("rust_sort", rust_dafault_sort),
     ];
     for (sort_name, sort_func) in sort_func_table {
         // get clone
@@ -82,6 +86,7 @@ pub fn benchmark_all_sorts(vec: &[usize]) -> HashMap<&'static str, time::Duratio
         ("radix_sort", usize_radix_sort),
         ("quick_sort", quick_sort),
         ("bucket_sort", usize_bucket_sort_adaptive_forward),
+        ("rust_sort", rust_dafault_sort),
     ];
     // message channel
     let (_tx, rx) = mpsc::channel();
